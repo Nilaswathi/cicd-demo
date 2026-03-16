@@ -21,7 +21,13 @@ pipeline {
                 script {
                     def scannerHome = tool 'sonar-scanner'
                     withSonarQubeEnv('sonar-server') {
-                        sh "${scannerHome}/bin/sonar-scanner"
+                        sh """
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=cicd-demo \
+                        -Dsonar.projectName=cicd-demo \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=http://44.204.29.141:9000
+                        """
                     }
                 }
             }
@@ -42,7 +48,7 @@ pipeline {
 
         stage('Run New Container') {
             steps {
-                sh 'docker run -d -p 8081:80 --name cicd-demo-container cicd-demo'
+                sh 'docker run -d -p 80:80 --name cicd-demo-container cicd-demo'
             }
         }
 
