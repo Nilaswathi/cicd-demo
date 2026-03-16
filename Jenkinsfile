@@ -18,8 +18,11 @@ pipeline {
 
         stage('SonarQube Scan') {
             steps {
-                withSonarQubeEnv('sonar-server') {
-                    sh 'sonar-scanner'
+                script {
+                    def scannerHome = tool 'sonar-scanner'
+                    withSonarQubeEnv('sonar-server') {
+                        sh "${scannerHome}/bin/sonar-scanner"
+                    }
                 }
             }
         }
@@ -32,13 +35,14 @@ pipeline {
 
         stage('Stop Old Container') {
             steps {
-                sh 'docker rm -f cicd-container || true'
+                sh 'docker stop cicd-demo-container || true'
+                sh 'docker rm cicd-demo-container || true'
             }
         }
 
         stage('Run New Container') {
             steps {
-                sh 'docker run -d -p 80:80 --name cicd-container cicd-demo'
+                sh 'docker run -d -p 8081:80 --name cicd-demo-container cicd-demo'
             }
         }
 
