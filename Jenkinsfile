@@ -10,6 +10,20 @@ pipeline {
             }
         }
 
+        stage('Build') {
+            steps {
+                sh 'echo Build completed'
+            }
+        }
+
+        stage('SonarQube Scan') {
+            steps {
+                withSonarQubeEnv('sonar-server') {
+                    sh 'sonar-scanner'
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t cicd-demo .'
