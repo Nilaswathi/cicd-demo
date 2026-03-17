@@ -24,9 +24,16 @@ pipeline {
   stage('SonarQube Scan') {
    steps {
     withSonarQubeEnv('sonar-scanner') {
-     sh 'sonar-scanner'
+     script {
+      def scannerHome = tool 'sonar-scanner'
+       sh """
+        ${scannerHome}/bin/sonar-scanner \
+        -Dsonar.projectKey=cicd-demo \
+        -Dsonar.sources=.
+         """
+     }
     }
-   }
+   }    
   }
 
   stage('Docker Build') {
