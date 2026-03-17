@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        sonarQube 'sonar-scanner'   // 👈 must match Jenkins tool name
+        sonarRunner 'sonar-scanner'   // 👈 must match Jenkins tool name
     }
 
     stages {
