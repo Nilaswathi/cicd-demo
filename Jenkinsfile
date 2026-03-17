@@ -1,10 +1,5 @@
 pipeline {
     agent any
-
-    tools {
-        sonarRunner 'sonar-scanner'   // 👈 must match Jenkins tool name
-    }
-
     stages {
 
         stage('Clone Repository') {
