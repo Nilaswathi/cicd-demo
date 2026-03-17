@@ -12,13 +12,16 @@ pipeline {
         stage('SonarQube Scan') {
             steps {
                 withSonarQubeEnv('sonar-server') {
-                    sh '''
-                    ${SONAR_SCANNER_HOME}/bin/sonar-scanner \
-                    -Dsonar.projectKey=cicd-demo \
-                    -Dsonar.sources=. \
-                    '''
+                    script {
+                        def scannerHome = tool 'sonar-scanner'
+                            sh """
+                                ${scannerHome}/bin/sonar-scanner \
+                                -Dsonar.projectKey=cicd-demo \
+                                -Dsonar.sources=.
+                                """
+                    }
                 }
-            }
+            }    
         }
 
         stage('Build Docker Image') {
