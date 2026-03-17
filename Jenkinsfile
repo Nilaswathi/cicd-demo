@@ -9,7 +9,13 @@ pipeline {
                 url: 'https://github.com/Nilaswathi/cicd-demo.git'
             }
         }
-
+        stage('SonarQube Scan') {
+            steps {
+                withSonarQubeEnv('sonar-server') {
+                    sh 'sonar-scanner'
+                }
+            }
+        }
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t cicd-demo .'
