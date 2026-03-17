@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        sonarQube 'sonar-scanner'   // 👈 must match Jenkins tool name
+    }
+
     stages {
 
         stage('Clone Repository') {
@@ -9,13 +13,19 @@ pipeline {
                 url: 'https://github.com/Nilaswathi/cicd-demo.git'
             }
         }
+
         stage('SonarQube Scan') {
             steps {
                 withSonarQubeEnv('sonar-server') {
-                    sh 'sonar-scanner'
+                    sh '''
+                    ${SONAR_SCANNER_HOME}/bin/sonar-scanner \
+                    -Dsonar.projectKey=cicd-demo \
+                    -Dsonar.sources=. \
+                    '''
                 }
             }
         }
+
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t cicd-demo .'
@@ -33,6 +43,5 @@ pipeline {
                 sh 'docker run -d -p 80:80 --name cicd-container cicd-demo'
             }
         }
-
     }
 }
